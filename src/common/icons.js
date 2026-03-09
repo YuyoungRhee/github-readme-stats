@@ -39,17 +39,17 @@ const rankIcon = (rankIcon, rankLevel, percentile, options = {}) => {
       `;
     case "percentile":
       return `
-        <text x="-5" y="-12" alignment-baseline="central" dominant-baseline="central" text-anchor="middle" data-testid="percentile-top-header" class="rank-percentile-header" ${baseTextAttrs} font-size="14" font-weight="600">
+        <text x="-5" y="-12" alignment-baseline="central" dominant-baseline="central" text-anchor="middle" data-testid="percentile-top-header" class="rank-percentile-header" ${baseTextAttrs} font-size="14" font-weight="700">
           Top
         </text>
-        <text x="-5" y="12" alignment-baseline="central" dominant-baseline="central" text-anchor="middle" data-testid="percentile-rank-value" class="rank-percentile-text" ${baseTextAttrs} font-size="16" font-weight="700">
+        <text x="-5" y="12" alignment-baseline="central" dominant-baseline="central" text-anchor="middle" data-testid="percentile-rank-value" class="rank-percentile-text" ${baseTextAttrs} font-size="16" font-weight="800">
           ${percentile.toFixed(1)}%
         </text>
       `;
     case "default":
     default:
       return `
-        <text x="-5" y="3" alignment-baseline="central" dominant-baseline="central" text-anchor="middle" data-testid="level-rank-icon" ${baseTextAttrs} font-size="24" font-weight="800">
+        <text x="-10" y="8" alignment-baseline="central" dominant-baseline="central" text-anchor="middle" data-testid="level-rank-icon" ${baseTextAttrs} font-size="24" font-weight="900">
           ${rankLevel}
         </text>
       `;

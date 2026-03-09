@@ -17,10 +17,13 @@ const setImageHeaders = (res, format) => {
 const svgToPng = (svg) => {
   const resvg = new Resvg(svg, {
     font: {
-      fontFiles: [path.join(__dirname, "../fonts/Inter.ttf")],
+      fontFiles: [
+        path.join(__dirname, "../fonts/NotoSans.ttf"),
+        path.join(__dirname, "../fonts/NotoSansKR.ttf"),
+      ],
       loadSystemFonts: false,
-      defaultFontFamily: "Inter",
-      sansSerifFamily: "Inter",
+      defaultFontFamily: "Noto Sans",
+      sansSerifFamily: "Noto Sans",
     },
   });
   const pngData = resvg.render();

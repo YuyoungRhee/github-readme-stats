@@ -114,7 +114,7 @@ class Card {
   renderTitle() {
     const titleStyle =
       this.animations === false
-        ? `fill="${this.colors.titleColor}" font-family="Segoe UI, Ubuntu, Sans-Serif" font-size="18" font-weight="600"`
+        ? `fill="${this.colors.titleColor}" font-family="Segoe UI, Ubuntu, Sans-Serif" font-size="18" font-weight="700"`
         : "";
     const titleText = `
       <text
@@ -225,7 +225,7 @@ class Card {
         <desc id="descId">${this.a11yDesc}</desc>
         <style>
           .header {
-            font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
+            font: 700 18px 'Segoe UI', Ubuntu, Sans-Serif;
             fill: ${this.colors.titleColor};
             animation: fadeInAnimation 0.8s ease-in-out forwards;
           }
