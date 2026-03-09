@@ -233,8 +233,6 @@ const getStyles = ({
       stroke-width: 6;
       stroke-linecap: round;
       opacity: 0.8;
-      transform-origin: -10px 8px;
-      transform: rotate(-90deg);
       animation: rankAnimation 1s forwards ease-in-out;
     }
     ${
@@ -586,6 +584,7 @@ const renderStatsCard = (stats, options = {}) => {
           cx="-10"
           cy="8"
           r="40"
+          transform="rotate(-90, -10, 8)"
           ${
             disable_animations
               ? `stroke-dashoffset="${calculateCircleProgress(progress)}"`
