@@ -67,8 +67,12 @@ const createProgressNode = ({
   progress,
   progressBarBackgroundColor,
   delay,
+  disable_animations,
 }) => {
   const progressPercentage = clampValue(progress, 2, 100);
+  const progressStyle = disable_animations
+    ? "animation: none;"
+    : `animation-delay: ${delay}ms;`;
 
   return `
     <svg width="${width}" x="${x}" y="${y}">
@@ -79,7 +83,7 @@ const createProgressNode = ({
             fill="${color}"
             rx="5" ry="5" x="0" y="0"
             class="lang-progress"
-            style="animation-delay: ${delay}ms;"
+            style="${progressStyle}"
         />
       </svg>
     </svg>

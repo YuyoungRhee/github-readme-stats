@@ -231,8 +231,13 @@ const createProgressTextNode = ({
   totalSize,
   statsFormat,
   index,
+  disable_animations,
 }) => {
   const staggerDelay = (index + 3) * 150;
+  const staggerStyle = disable_animations
+    ? "opacity: 1"
+    : `animation-delay: ${staggerDelay}ms`;
+  const staggerClass = disable_animations ? "" : "stagger";
   const paddingRight = 95;
   const progressTextX = width - paddingRight + 10;
   const progressWidth = width - paddingRight;
@@ -241,7 +246,7 @@ const createProgressTextNode = ({
   const displayValue = getDisplayValue(size, progress, statsFormat);
 
   return `
-    <g class="stagger" style="animation-delay: ${staggerDelay}ms">
+    <g class="${staggerClass}" style="${staggerStyle}">
       <text data-testid="lang-name" x="2" y="15" class="lang-name">${name}</text>
       <text x="${progressTextX}" y="34" class="lang-name">${displayValue}</text>
       ${createProgressNode({
@@ -252,6 +257,7 @@ const createProgressTextNode = ({
         progress,
         progressBarBackgroundColor: "#ddd",
         delay: staggerDelay + 300,
+        disable_animations,
       })}
     </g>
   `;
@@ -274,15 +280,20 @@ const createCompactLangNode = ({
   hideProgress,
   statsFormat = "percentages",
   index,
+  disable_animations,
 }) => {
   const percentages = (lang.size / totalSize) * 100;
   const displayValue = getDisplayValue(lang.size, percentages, statsFormat);
 
   const staggerDelay = (index + 3) * 150;
+  const staggerStyle = disable_animations
+    ? "opacity: 1"
+    : `animation-delay: ${staggerDelay}ms`;
+  const staggerClass = disable_animations ? "" : "stagger";
   const color = lang.color || "#858585";
 
   return `
-    <g class="stagger" style="animation-delay: ${staggerDelay}ms">
+    <g class="${staggerClass}" style="${staggerStyle}">
       <circle cx="5" cy="6" r="5" fill="${color}" />
       <text data-testid="lang-name" x="15" y="10" class='lang-name'>
         ${lang.name} ${hideProgress ? "" : displayValue}
@@ -306,6 +317,7 @@ const createLanguageTextNode = ({
   totalSize,
   hideProgress,
   statsFormat,
+  disable_animations,
 }) => {
   const longestLang = getLongestLang(langs);
   const chunked = chunkArray(langs, langs.length / 2);
@@ -318,6 +330,7 @@ const createLanguageTextNode = ({
         hideProgress,
         statsFormat,
         index,
+        disable_animations,
       }),
     );
     return flexLayout({
@@ -345,7 +358,12 @@ const createLanguageTextNode = ({
  * @param {string} props.statsFormat Stats format
  * @returns {string} Donut layout programming language SVG node.
  */
-const createDonutLanguagesNode = ({ langs, totalSize, statsFormat }) => {
+const createDonutLanguagesNode = ({
+  langs,
+  totalSize,
+  statsFormat,
+  disable_animations,
+}) => {
   return flexLayout({
     items: langs.map((lang, index) => {
       return createCompactLangNode({
@@ -354,6 +372,7 @@ const createDonutLanguagesNode = ({ langs, totalSize, statsFormat }) => {
         hideProgress: false,
         statsFormat,
         index,
+        disable_animations,
       });
     }),
     gap: 32,
@@ -370,7 +389,13 @@ const createDonutLanguagesNode = ({ langs, totalSize, statsFormat }) => {
  * @param {string} statsFormat Stats format.
  * @returns {string} Normal layout card SVG object.
  */
-const renderNormalLayout = (langs, width, totalLanguageSize, statsFormat) => {
+const renderNormalLayout = (
+  langs,
+  width,
+  totalLanguageSize,
+  statsFormat,
+  disable_animations,
+) => {
   return flexLayout({
     items: langs.map((lang, index) => {
       return createProgressTextNode({
@@ -381,6 +406,7 @@ const renderNormalLayout = (langs, width, totalLanguageSize, statsFormat) => {
         totalSize: totalLanguageSize,
         statsFormat,
         index,
+        disable_animations,
       });
     }),
     gap: 40,
@@ -404,6 +430,7 @@ const renderCompactLayout = (
   totalLanguageSize,
   hideProgress,
   statsFormat = "percentages",
+  disable_animations,
 ) => {
   const paddingRight = 50;
   const offsetWidth = width - paddingRight;
@@ -451,6 +478,7 @@ const renderCompactLayout = (
         totalSize: totalLanguageSize,
         hideProgress,
         statsFormat,
+        disable_animations,
       })}
     </g>
   `;
@@ -464,7 +492,12 @@ const renderCompactLayout = (
  * @param {string} statsFormat Stats format.
  * @returns {string} Compact layout card SVG object.
  */
-const renderDonutVerticalLayout = (langs, totalLanguageSize, statsFormat) => {
+const renderDonutVerticalLayout = (
+  langs,
+  totalLanguageSize,
+  statsFormat,
+  disable_animations,
+) => {
   // Donut vertical chart radius and total length
   const radius = 80;
   const totalCircleLength = getCircleLength(radius);
@@ -484,8 +517,13 @@ const renderDonutVerticalLayout = (langs, totalLanguageSize, statsFormat) => {
     const circleLength = totalCircleLength * (percentage / 100);
     const delay = startDelayCoefficient * 100;
 
+    const staggerStyle = disable_animations
+      ? "opacity: 1"
+      : `animation-delay: ${delay}ms`;
+    const staggerClass = disable_animations ? "" : "stagger";
+
     circles.push(`
-      <g class="stagger" style="animation-delay: ${delay}ms">
+      <g class="${staggerClass}" style="${staggerStyle}">
         <circle 
           cx="150"
           cy="100"
@@ -521,6 +559,7 @@ const renderDonutVerticalLayout = (langs, totalLanguageSize, statsFormat) => {
             totalSize: totalLanguageSize,
             hideProgress: false,
             statsFormat,
+            disable_animations,
           })}
         </svg>
       </g>
@@ -536,7 +575,12 @@ const renderDonutVerticalLayout = (langs, totalLanguageSize, statsFormat) => {
  * @param {string} statsFormat Stats format.
  * @returns {string} Compact layout card SVG object.
  */
-const renderPieLayout = (langs, totalLanguageSize, statsFormat) => {
+const renderPieLayout = (
+  langs,
+  totalLanguageSize,
+  statsFormat,
+  disable_animations,
+) => {
   // Pie chart radius and center coordinates
   const radius = 90;
   const centerX = 150;
@@ -585,10 +629,14 @@ const renderPieLayout = (langs, totalLanguageSize, statsFormat) => {
 
     // Calculate delay
     const delay = startDelayCoefficient * 100;
+    const staggerStyle = disable_animations
+      ? "opacity: 1"
+      : `animation-delay: ${delay}ms`;
+    const staggerClass = disable_animations ? "" : "stagger";
 
     // SVG arc markup
     paths.push(`
-      <g class="stagger" style="animation-delay: ${delay}ms">
+      <g class="${staggerClass}" style="${staggerStyle}">
         <path
           data-testid="lang-pie"
           size="${percentage}"
@@ -671,7 +719,13 @@ const createDonutPaths = (cx, cy, radius, percentages) => {
  * @param {string} statsFormat Stats format.
  * @returns {string} Donut layout card SVG object.
  */
-const renderDonutLayout = (langs, width, totalLanguageSize, statsFormat) => {
+const renderDonutLayout = (
+  langs,
+  width,
+  totalLanguageSize,
+  statsFormat,
+  disable_animations,
+) => {
   const centerX = width / 3;
   const centerY = width / 3;
   const radius = centerX - 60;
@@ -691,9 +745,13 @@ const renderDonutLayout = (langs, width, totalLanguageSize, statsFormat) => {
           .map((section, index) => {
             const staggerDelay = (index + 3) * 100;
             const delay = staggerDelay + 300;
+            const staggerStyle = disable_animations
+              ? "opacity: 1"
+              : `animation-delay: ${delay}ms`;
+            const staggerClass = disable_animations ? "" : "stagger";
 
             const output = `
-       <g class="stagger" style="animation-delay: ${delay}ms">
+       <g class="${staggerClass}" style="${staggerStyle}">
         <path
           data-testid="lang-donut"
           size="${section.percent}"
@@ -714,7 +772,12 @@ const renderDonutLayout = (langs, width, totalLanguageSize, statsFormat) => {
   return `
     <g transform="translate(0, 0)">
       <g transform="translate(0, 0)">
-        ${createDonutLanguagesNode({ langs, totalSize: totalLanguageSize, statsFormat })}
+        ${createDonutLanguagesNode({
+          langs,
+          totalSize: totalLanguageSize,
+          statsFormat,
+          disable_animations,
+        })}
       </g>
 
       <g transform="translate(125, ${donutCenterTranslation(langs.length)})">
@@ -839,13 +902,19 @@ const renderTopLanguages = (topLangs, options = {}) => {
     });
   } else if (layout === "pie") {
     height = calculatePieLayoutHeight(langs.length);
-    finalLayout = renderPieLayout(langs, totalLanguageSize, stats_format);
+    finalLayout = renderPieLayout(
+      langs,
+      totalLanguageSize,
+      stats_format,
+      disable_animations,
+    );
   } else if (layout === "donut-vertical") {
     height = calculateDonutVerticalLayoutHeight(langs.length);
     finalLayout = renderDonutVerticalLayout(
       langs,
       totalLanguageSize,
       stats_format,
+      disable_animations,
     );
   } else if (layout === "compact" || hide_progress == true) {
     height =
@@ -857,6 +926,7 @@ const renderTopLanguages = (topLangs, options = {}) => {
       totalLanguageSize,
       hide_progress,
       stats_format,
+      disable_animations,
     );
   } else if (layout === "donut") {
     height = calculateDonutLayoutHeight(langs.length);
@@ -866,6 +936,7 @@ const renderTopLanguages = (topLangs, options = {}) => {
       width,
       totalLanguageSize,
       stats_format,
+      disable_animations,
     );
   } else {
     finalLayout = renderNormalLayout(
@@ -873,6 +944,7 @@ const renderTopLanguages = (topLangs, options = {}) => {
       width,
       totalLanguageSize,
       stats_format,
+      disable_animations,
     );
   }
 

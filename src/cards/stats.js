@@ -80,6 +80,7 @@ const createTextNode = ({
   bold,
   numberFormat,
   numberPrecision,
+  disable_animations,
 }) => {
   const precision =
     typeof numberPrecision === "number" && !isNaN(numberPrecision)
@@ -90,6 +91,10 @@ const createTextNode = ({
       ? value
       : kFormatter(value, precision);
   const staggerDelay = (index + 3) * 150;
+  const staggerStyle = disable_animations
+    ? "opacity: 1"
+    : `animation-delay: ${staggerDelay}ms`;
+  const staggerClass = disable_animations ? "" : "stagger";
 
   const labelOffset = showIcons ? `x="25"` : "";
   const iconSvg = showIcons
@@ -100,7 +105,7 @@ const createTextNode = ({
   `
     : "";
   return `
-    <g class="stagger" style="animation-delay: ${staggerDelay}ms" transform="translate(25, 0)">
+    <g class="${staggerClass}" style="${staggerStyle}" transform="translate(25, 0)">
       ${iconSvg}
       <text class="stat ${
         bold ? " bold" : "not_bold"
@@ -439,6 +444,7 @@ const renderStatsCard = (stats, options = {}) => {
         bold: text_bold,
         numberFormat: number_format,
         numberPrecision: number_precision,
+        disable_animations,
       });
     });
 
@@ -566,7 +572,17 @@ const renderStatsCard = (stats, options = {}) => {
             height / 2 - 50
           })">
         <circle class="rank-circle-rim" cx="-10" cy="8" r="40" />
-        <circle class="rank-circle" cx="-10" cy="8" r="40" />
+        <circle
+          class="rank-circle"
+          cx="-10"
+          cy="8"
+          r="40"
+          ${
+            disable_animations
+              ? `stroke-dashoffset="${calculateCircleProgress(progress)}"`
+              : ""
+          }
+        />
         <g class="rank-text">
           ${rankIcon(rank_icon, rank?.level, rank?.percentile)}
         </g>

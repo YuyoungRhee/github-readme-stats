@@ -69,13 +69,21 @@ const formatLanguageValue = ({ display_format, lang }) => {
  * @param {"time" | "percent"} args.display_format The display format of the language node.
  * @returns {string} The compact layout language SVG node.
  */
-const createCompactLangNode = ({ lang, x, y, display_format }) => {
+const createCompactLangNode = ({
+  lang,
+  x,
+  y,
+  display_format,
+  disable_animations,
+}) => {
   // @ts-ignore
   const color = languageColors[lang.name] || "#858585";
   const value = formatLanguageValue({ display_format, lang });
 
+  const staggerStyle = disable_animations ? "opacity: 1" : "";
+
   return `
-    <g transform="translate(${x}, ${y})">
+    <g transform="translate(${x}, ${y})" style="${staggerStyle}">
       <circle cx="5" cy="6" r="5" fill="${color}" />
       <text data-testid="lang-name" x="15" y="10" class='lang-name'>
         ${lang.name} - ${value}
@@ -94,7 +102,13 @@ const createCompactLangNode = ({ lang, x, y, display_format }) => {
  * @param {number} args.card_width Width in px of the card.
  * @returns {string[]} The language text node items.
  */
-const createLanguageTextNode = ({ langs, y, display_format, card_width }) => {
+const createLanguageTextNode = ({
+  langs,
+  y,
+  display_format,
+  card_width,
+  disable_animations,
+}) => {
   const LEFT_X = 25;
   const RIGHT_X_BASE = 230;
   const rightOffset = (card_width - DEFAULT_CARD_WIDTH) / 2;
@@ -107,6 +121,7 @@ const createLanguageTextNode = ({ langs, y, display_format, card_width }) => {
       x: isLeft ? LEFT_X : RIGHT_X,
       y: y + DEFAULT_LINE_HEIGHT * Math.floor(index / 2),
       display_format,
+      disable_animations,
     });
   });
 };
@@ -136,8 +151,13 @@ const createTextNode = ({
   progressBarColor,
   progressBarBackgroundColor,
   progressBarWidth,
+  disable_animations,
 }) => {
   const staggerDelay = (index + 3) * 150;
+  const staggerStyle = disable_animations
+    ? "opacity: 1"
+    : `animation-delay: ${staggerDelay}ms`;
+  const staggerClass = disable_animations ? "" : "stagger";
   const cardProgress = hideProgress
     ? null
     : createProgressNode({
@@ -150,10 +170,11 @@ const createTextNode = ({
         name: label,
         progressBarBackgroundColor,
         delay: staggerDelay + 300,
+        disable_animations,
       });
 
   return `
-    <g class="stagger" style="animation-delay: ${staggerDelay}ms" transform="translate(25, 0)">
+    <g class="${staggerClass}" style="${staggerStyle}" transform="translate(25, 0)">
       <text class="stat bold" y="12.5" data-testid="${id}">${label}:</text>
       <text
         class="stat"
@@ -195,6 +216,7 @@ const getStyles = ({
   // eslint-disable-next-line no-unused-vars
   titleColor,
   textColor,
+  disable_animations,
 }) => {
   return `
     .stat {
@@ -205,7 +227,7 @@ const getStyles = ({
       .stat { font-size:12px; }
     }
     .stagger {
-      opacity: 0;
+      opacity: ${disable_animations ? 1 : 0};
       animation: fadeInAnimation 0.3s ease-in-out forwards;
     }
     .not_bold { font-weight: 400 }
@@ -313,6 +335,7 @@ const renderWakatimeCard = (stats = {}, options = { hide: [] }) => {
   const cssStyles = getStyles({
     titleColor,
     textColor,
+    disable_animations,
   });
 
   let finalLayout = "";
@@ -363,6 +386,7 @@ const renderWakatimeCard = (stats = {}, options = { hide: [] }) => {
               langs: filteredLanguages,
               display_format,
               card_width: normalizedWidth,
+              disable_animations,
             }).join("")
           : noCodingActivityNode({
               // @ts-ignore
@@ -391,6 +415,7 @@ const renderWakatimeCard = (stats = {}, options = { hide: [] }) => {
               progressBarBackgroundColor: textColor,
               hideProgress: hide_progress,
               progressBarWidth: normalizedWidth - TOTAL_TEXT_WIDTH,
+              disable_animations,
             });
           })
         : [
