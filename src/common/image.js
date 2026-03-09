@@ -1,4 +1,8 @@
+import path from "path";
+import { fileURLToPath } from "url";
 import { Resvg } from "@resvg/resvg-js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const normalizeFormat = (format) =>
   typeof format === "string" ? format.toLowerCase() : "";
@@ -11,7 +15,14 @@ const setImageHeaders = (res, format) => {
 };
 
 const svgToPng = (svg) => {
-  const resvg = new Resvg(svg);
+  const resvg = new Resvg(svg, {
+    font: {
+      fontFiles: [path.join(__dirname, "../fonts/Inter.ttf")],
+      loadSystemFonts: false,
+      defaultFontFamily: "Inter",
+      sansSerifFamily: "Inter",
+    },
+  });
   const pngData = resvg.render();
   return Buffer.from(pngData.asPng());
 };
