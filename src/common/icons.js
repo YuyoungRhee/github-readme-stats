@@ -24,7 +24,12 @@ const icons = {
  * @param {number} percentile - The rank percentile.
  * @returns {string} - The SVG code of the rank icon
  */
-const rankIcon = (rankIcon, rankLevel, percentile) => {
+const rankIcon = (rankIcon, rankLevel, percentile, options = {}) => {
+  const { inlineStyles = false, textColor } = options;
+  const fontFamily = "Segoe UI, Ubuntu, Sans-Serif";
+  const baseTextAttrs = inlineStyles
+    ? `fill="${textColor}" font-family="${fontFamily}"`
+    : "";
   switch (rankIcon) {
     case "github":
       return `
@@ -34,17 +39,17 @@ const rankIcon = (rankIcon, rankLevel, percentile) => {
       `;
     case "percentile":
       return `
-        <text x="-5" y="-12" alignment-baseline="central" dominant-baseline="central" text-anchor="middle" data-testid="percentile-top-header" class="rank-percentile-header">
+        <text x="-5" y="-12" alignment-baseline="central" dominant-baseline="central" text-anchor="middle" data-testid="percentile-top-header" class="rank-percentile-header" ${baseTextAttrs} font-size="14" font-weight="600">
           Top
         </text>
-        <text x="-5" y="12" alignment-baseline="central" dominant-baseline="central" text-anchor="middle" data-testid="percentile-rank-value" class="rank-percentile-text">
+        <text x="-5" y="12" alignment-baseline="central" dominant-baseline="central" text-anchor="middle" data-testid="percentile-rank-value" class="rank-percentile-text" ${baseTextAttrs} font-size="16" font-weight="700">
           ${percentile.toFixed(1)}%
         </text>
       `;
     case "default":
     default:
       return `
-        <text x="-5" y="3" alignment-baseline="central" dominant-baseline="central" text-anchor="middle" data-testid="level-rank-icon">
+        <text x="-5" y="3" alignment-baseline="central" dominant-baseline="central" text-anchor="middle" data-testid="level-rank-icon" ${baseTextAttrs} font-size="24" font-weight="800">
           ${rankLevel}
         </text>
       `;

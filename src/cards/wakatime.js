@@ -74,6 +74,7 @@ const createCompactLangNode = ({
   x,
   y,
   display_format,
+  textColor,
   disable_animations,
 }) => {
   // @ts-ignore
@@ -81,11 +82,14 @@ const createCompactLangNode = ({
   const value = formatLanguageValue({ display_format, lang });
 
   const staggerStyle = disable_animations ? "opacity: 1" : "";
+  const textStyle = disable_animations
+    ? `fill="${textColor}" font-family="Segoe UI, Ubuntu, Sans-Serif" font-size="11" font-weight="400"`
+    : "";
 
   return `
     <g transform="translate(${x}, ${y})" style="${staggerStyle}">
       <circle cx="5" cy="6" r="5" fill="${color}" />
-      <text data-testid="lang-name" x="15" y="10" class='lang-name'>
+      <text data-testid="lang-name" x="15" y="10" class='lang-name' ${textStyle}>
         ${lang.name} - ${value}
       </text>
     </g>
@@ -107,6 +111,7 @@ const createLanguageTextNode = ({
   y,
   display_format,
   card_width,
+  textColor,
   disable_animations,
 }) => {
   const LEFT_X = 25;
@@ -121,6 +126,7 @@ const createLanguageTextNode = ({
       x: isLeft ? LEFT_X : RIGHT_X,
       y: y + DEFAULT_LINE_HEIGHT * Math.floor(index / 2),
       display_format,
+      textColor,
       disable_animations,
     });
   });
@@ -151,6 +157,7 @@ const createTextNode = ({
   progressBarColor,
   progressBarBackgroundColor,
   progressBarWidth,
+  textColor,
   disable_animations,
 }) => {
   const staggerDelay = (index + 3) * 150;
@@ -158,6 +165,12 @@ const createTextNode = ({
     ? "opacity: 1"
     : `animation-delay: ${staggerDelay}ms`;
   const staggerClass = disable_animations ? "" : "stagger";
+  const labelStyle = disable_animations
+    ? `fill="${textColor}" font-family="Segoe UI, Ubuntu, Helvetica Neue, Sans-Serif" font-size="14" font-weight="700"`
+    : "";
+  const valueStyle = disable_animations
+    ? `fill="${textColor}" font-family="Segoe UI, Ubuntu, Helvetica Neue, Sans-Serif" font-size="14" font-weight="600"`
+    : "";
   const cardProgress = hideProgress
     ? null
     : createProgressNode({
@@ -175,11 +188,12 @@ const createTextNode = ({
 
   return `
     <g class="${staggerClass}" style="${staggerStyle}" transform="translate(25, 0)">
-      <text class="stat bold" y="12.5" data-testid="${id}">${label}:</text>
+      <text class="stat bold" y="12.5" data-testid="${id}" ${labelStyle}>${label}:</text>
       <text
         class="stat"
         x="${hideProgress ? HIDDEN_PROGRESSBAR_PADDING : PROGRESSBAR_PADDING + progressBarWidth}"
         y="12.5"
+        ${valueStyle}
       >${value}</text>
       ${cardProgress}
     </g>
@@ -386,6 +400,7 @@ const renderWakatimeCard = (stats = {}, options = { hide: [] }) => {
               langs: filteredLanguages,
               display_format,
               card_width: normalizedWidth,
+              textColor,
               disable_animations,
             }).join("")
           : noCodingActivityNode({
@@ -415,6 +430,7 @@ const renderWakatimeCard = (stats = {}, options = { hide: [] }) => {
               progressBarBackgroundColor: textColor,
               hideProgress: hide_progress,
               progressBarWidth: normalizedWidth - TOTAL_TEXT_WIDTH,
+              textColor,
               disable_animations,
             });
           })

@@ -112,11 +112,16 @@ class Card {
    * @returns {string} The rendered card title.
    */
   renderTitle() {
+    const titleStyle =
+      this.animations === false
+        ? `fill="${this.colors.titleColor}" font-family="Segoe UI, Ubuntu, Sans-Serif" font-size="18" font-weight="600"`
+        : "";
     const titleText = `
       <text
         x="0"
         y="0"
         class="header"
+        ${titleStyle}
         data-testid="header"
       >${this.title}</text>
     `;

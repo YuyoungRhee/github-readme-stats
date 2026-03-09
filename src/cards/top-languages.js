@@ -231,6 +231,7 @@ const createProgressTextNode = ({
   totalSize,
   statsFormat,
   index,
+  textColor,
   disable_animations,
 }) => {
   const staggerDelay = (index + 3) * 150;
@@ -238,6 +239,9 @@ const createProgressTextNode = ({
     ? "opacity: 1"
     : `animation-delay: ${staggerDelay}ms`;
   const staggerClass = disable_animations ? "" : "stagger";
+  const textStyle = disable_animations
+    ? `fill="${textColor}" font-family="Segoe UI, Ubuntu, Sans-Serif" font-size="11" font-weight="400"`
+    : "";
   const paddingRight = 95;
   const progressTextX = width - paddingRight + 10;
   const progressWidth = width - paddingRight;
@@ -247,8 +251,8 @@ const createProgressTextNode = ({
 
   return `
     <g class="${staggerClass}" style="${staggerStyle}">
-      <text data-testid="lang-name" x="2" y="15" class="lang-name">${name}</text>
-      <text x="${progressTextX}" y="34" class="lang-name">${displayValue}</text>
+      <text data-testid="lang-name" x="2" y="15" class="lang-name" ${textStyle}>${name}</text>
+      <text x="${progressTextX}" y="34" class="lang-name" ${textStyle}>${displayValue}</text>
       ${createProgressNode({
         x: 0,
         y: 25,
@@ -280,6 +284,7 @@ const createCompactLangNode = ({
   hideProgress,
   statsFormat = "percentages",
   index,
+  textColor,
   disable_animations,
 }) => {
   const percentages = (lang.size / totalSize) * 100;
@@ -290,12 +295,15 @@ const createCompactLangNode = ({
     ? "opacity: 1"
     : `animation-delay: ${staggerDelay}ms`;
   const staggerClass = disable_animations ? "" : "stagger";
+  const textStyle = disable_animations
+    ? `fill="${textColor}" font-family="Segoe UI, Ubuntu, Sans-Serif" font-size="11" font-weight="400"`
+    : "";
   const color = lang.color || "#858585";
 
   return `
     <g class="${staggerClass}" style="${staggerStyle}">
       <circle cx="5" cy="6" r="5" fill="${color}" />
-      <text data-testid="lang-name" x="15" y="10" class='lang-name'>
+      <text data-testid="lang-name" x="15" y="10" class='lang-name' ${textStyle}>
         ${lang.name} ${hideProgress ? "" : displayValue}
       </text>
     </g>
@@ -317,6 +325,7 @@ const createLanguageTextNode = ({
   totalSize,
   hideProgress,
   statsFormat,
+  textColor,
   disable_animations,
 }) => {
   const longestLang = getLongestLang(langs);
@@ -330,6 +339,7 @@ const createLanguageTextNode = ({
         hideProgress,
         statsFormat,
         index,
+        textColor,
         disable_animations,
       }),
     );
@@ -362,6 +372,7 @@ const createDonutLanguagesNode = ({
   langs,
   totalSize,
   statsFormat,
+  textColor,
   disable_animations,
 }) => {
   return flexLayout({
@@ -372,6 +383,7 @@ const createDonutLanguagesNode = ({
         hideProgress: false,
         statsFormat,
         index,
+        textColor,
         disable_animations,
       });
     }),
@@ -394,6 +406,7 @@ const renderNormalLayout = (
   width,
   totalLanguageSize,
   statsFormat,
+  textColor,
   disable_animations,
 ) => {
   return flexLayout({
@@ -406,6 +419,7 @@ const renderNormalLayout = (
         totalSize: totalLanguageSize,
         statsFormat,
         index,
+        textColor,
         disable_animations,
       });
     }),
@@ -430,6 +444,7 @@ const renderCompactLayout = (
   totalLanguageSize,
   hideProgress,
   statsFormat = "percentages",
+  textColor,
   disable_animations,
 ) => {
   const paddingRight = 50;
@@ -478,6 +493,7 @@ const renderCompactLayout = (
         totalSize: totalLanguageSize,
         hideProgress,
         statsFormat,
+        textColor,
         disable_animations,
       })}
     </g>
@@ -496,6 +512,7 @@ const renderDonutVerticalLayout = (
   langs,
   totalLanguageSize,
   statsFormat,
+  textColor,
   disable_animations,
 ) => {
   // Donut vertical chart radius and total length
@@ -559,6 +576,7 @@ const renderDonutVerticalLayout = (
             totalSize: totalLanguageSize,
             hideProgress: false,
             statsFormat,
+            textColor,
             disable_animations,
           })}
         </svg>
@@ -724,6 +742,7 @@ const renderDonutLayout = (
   width,
   totalLanguageSize,
   statsFormat,
+  textColor,
   disable_animations,
 ) => {
   const centerX = width / 3;
@@ -776,6 +795,7 @@ const renderDonutLayout = (
           langs,
           totalSize: totalLanguageSize,
           statsFormat,
+          textColor,
           disable_animations,
         })}
       </g>
@@ -914,6 +934,7 @@ const renderTopLanguages = (topLangs, options = {}) => {
       langs,
       totalLanguageSize,
       stats_format,
+      colors.textColor,
       disable_animations,
     );
   } else if (layout === "compact" || hide_progress == true) {
@@ -926,6 +947,7 @@ const renderTopLanguages = (topLangs, options = {}) => {
       totalLanguageSize,
       hide_progress,
       stats_format,
+      colors.textColor,
       disable_animations,
     );
   } else if (layout === "donut") {
@@ -936,6 +958,7 @@ const renderTopLanguages = (topLangs, options = {}) => {
       width,
       totalLanguageSize,
       stats_format,
+      colors.textColor,
       disable_animations,
     );
   } else {
@@ -944,6 +967,7 @@ const renderTopLanguages = (topLangs, options = {}) => {
       width,
       totalLanguageSize,
       stats_format,
+      colors.textColor,
       disable_animations,
     );
   }

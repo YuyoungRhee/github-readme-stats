@@ -80,6 +80,7 @@ const createTextNode = ({
   bold,
   numberFormat,
   numberPrecision,
+  textColor,
   disable_animations,
 }) => {
   const precision =
@@ -95,6 +96,11 @@ const createTextNode = ({
     ? "opacity: 1"
     : `animation-delay: ${staggerDelay}ms`;
   const staggerClass = disable_animations ? "" : "stagger";
+  const textStyle = disable_animations
+    ? `fill="${textColor}" font-family="Segoe UI, Ubuntu, Helvetica Neue, Sans-Serif" font-size="14" font-weight="${
+        bold ? 700 : 400
+      }"`
+    : "";
 
   const labelOffset = showIcons ? `x="25"` : "";
   const iconSvg = showIcons
@@ -109,11 +115,12 @@ const createTextNode = ({
       ${iconSvg}
       <text class="stat ${
         bold ? " bold" : "not_bold"
-      }" ${labelOffset} y="12.5">${label}:</text>
+      }" ${labelOffset} y="12.5" ${textStyle}>${label}:</text>
       <text
         class="stat ${bold ? " bold" : "not_bold"}"
         x="${(showIcons ? 140 : 120) + shiftValuePos}"
         y="12.5"
+        ${textStyle}
         data-testid="${id}"
       >${kValue}${unitSymbol ? ` ${unitSymbol}` : ""}</text>
     </g>
@@ -444,6 +451,7 @@ const renderStatsCard = (stats, options = {}) => {
         bold: text_bold,
         numberFormat: number_format,
         numberPrecision: number_precision,
+        textColor,
         disable_animations,
       });
     });
@@ -584,7 +592,10 @@ const renderStatsCard = (stats, options = {}) => {
           }
         />
         <g class="rank-text">
-          ${rankIcon(rank_icon, rank?.level, rank?.percentile)}
+          ${rankIcon(rank_icon, rank?.level, rank?.percentile, {
+            inlineStyles: disable_animations,
+            textColor,
+          })}
         </g>
       </g>`;
 
