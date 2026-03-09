@@ -23,4 +23,4 @@ const sendImage = (res, svg, format) => {
   return res.send(svgToPng(svg));
 };
 
-export { sendImage, setImageHeaders };
+export { isSvgFormat, sendImage, setImageHeaders };

@@ -14,7 +14,11 @@ import {
 } from "../src/common/error.js";
 import { parseArray, parseBoolean } from "../src/common/ops.js";
 import { renderError } from "../src/common/render.js";
-import { sendImage, setImageHeaders } from "../src/common/image.js";
+import {
+  isSvgFormat,
+  sendImage,
+  setImageHeaders,
+} from "../src/common/image.js";
 import { fetchStats } from "../src/fetchers/stats.js";
 import { isLocaleAvailable } from "../src/translations.js";
 
@@ -51,6 +55,10 @@ export default async (req, res) => {
     show,
     format,
   } = req.query;
+  const svgFormat = isSvgFormat(format);
+  const shouldDisableAnimations =
+    !svgFormat || parseBoolean(disable_animations);
+
   setImageHeaders(res, format);
 
   const access = guardAccess({
@@ -134,7 +142,7 @@ export default async (req, res) => {
         number_format,
         number_precision: parseInt(number_precision, 10),
         locale: locale ? locale.toLowerCase() : null,
-        disable_animations: parseBoolean(disable_animations),
+        disable_animations: shouldDisableAnimations,
         rank_icon,
         show: showStats,
       }),

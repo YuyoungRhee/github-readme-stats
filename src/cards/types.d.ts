@@ -64,4 +64,5 @@ export type WakaTimeOptions = CommonOptions & {
 
 export type GistCardOptions = CommonOptions & {
   show_owner: boolean;
+  disable_animations: boolean;
 };

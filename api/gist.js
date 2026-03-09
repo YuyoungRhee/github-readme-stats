@@ -16,7 +16,11 @@ import {
   retrieveSecondaryMessage,
 } from "../src/common/error.js";
 import { parseBoolean } from "../src/common/ops.js";
-import { sendImage, setImageHeaders } from "../src/common/image.js";
+import {
+  isSvgFormat,
+  sendImage,
+  setImageHeaders,
+} from "../src/common/image.js";
 
 // @ts-ignore
 export default async (req, res) => {
@@ -35,6 +39,9 @@ export default async (req, res) => {
     hide_border,
     format,
   } = req.query;
+  const svgFormat = isSvgFormat(format);
+  const shouldDisableAnimations = !svgFormat;
+
   setImageHeaders(res, format);
 
   const access = guardAccess({
@@ -96,6 +103,7 @@ export default async (req, res) => {
         locale: locale ? locale.toLowerCase() : null,
         show_owner: parseBoolean(show_owner),
         hide_border: parseBoolean(hide_border),
+        disable_animations: shouldDisableAnimations,
       }),
       format,
     );

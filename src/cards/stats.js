@@ -175,6 +175,7 @@ const getStyles = ({
   ringColor,
   show_icons,
   progress,
+  disable_animations,
 }) => {
   return `
     .stat {
@@ -185,7 +186,7 @@ const getStyles = ({
       .stat { font-size:12px; }
     }
     .stagger {
-      opacity: 0;
+      opacity: ${disable_animations ? 1 : 0};
       animation: fadeInAnimation 0.3s ease-in-out forwards;
     }
     .rank-text {
@@ -222,6 +223,12 @@ const getStyles = ({
       transform-origin: -10px 8px;
       transform: rotate(-90deg);
       animation: rankAnimation 1s forwards ease-in-out;
+    }
+    ${
+      disable_animations
+        ? `.rank-circle { stroke-dashoffset: ${calculateCircleProgress(progress)}; animation: none; }
+           .rank-text { animation: none; }`
+        : ""
     }
     ${process.env.NODE_ENV === "test" ? "" : getProgressAnimation({ progress })}
   `;
@@ -458,6 +465,7 @@ const renderStatsCard = (stats, options = {}) => {
     iconColor,
     show_icons,
     progress,
+    disable_animations,
   });
 
   const calculateTextWidth = () => {

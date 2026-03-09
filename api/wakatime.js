@@ -16,7 +16,11 @@ import {
   retrieveSecondaryMessage,
 } from "../src/common/error.js";
 import { parseArray, parseBoolean } from "../src/common/ops.js";
-import { sendImage, setImageHeaders } from "../src/common/image.js";
+import {
+  isSvgFormat,
+  sendImage,
+  setImageHeaders,
+} from "../src/common/image.js";
 
 // @ts-ignore
 export default async (req, res) => {
@@ -45,6 +49,10 @@ export default async (req, res) => {
     disable_animations,
     format,
   } = req.query;
+  const svgFormat = isSvgFormat(format);
+  const shouldDisableAnimations =
+    !svgFormat || parseBoolean(disable_animations);
+
   setImageHeaders(res, format);
 
   const access = guardAccess({
@@ -114,7 +122,7 @@ export default async (req, res) => {
         layout,
         langs_count,
         display_format,
-        disable_animations: parseBoolean(disable_animations),
+        disable_animations: shouldDisableAnimations,
       }),
       format,
     );

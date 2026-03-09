@@ -233,7 +233,9 @@ class Card {
           ${process.env.NODE_ENV === "test" ? "" : this.getAnimations()}
           ${
             this.animations === false
-              ? `* { animation-duration: 0s !important; animation-delay: 0s !important; }`
+              ? `* { animation: none !important; animation-delay: 0s !important; }
+                 .stagger { opacity: 1 !important; }
+                 .lang-progress { width: 100% !important; }`
               : ""
           }
         </style>
