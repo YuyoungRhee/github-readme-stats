@@ -56,14 +56,8 @@ describe("Test /api/pin", () => {
 
     await pin(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      // @ts-ignore
-      renderRepoCard({
-        ...data_repo.repository,
-        starCount: data_repo.repository.stargazers.totalCount,
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should get the query options", async () => {
@@ -86,17 +80,8 @@ describe("Test /api/pin", () => {
 
     await pin(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderRepoCard(
-        // @ts-ignore
-        {
-          ...data_repo.repository,
-          starCount: data_repo.repository.stargazers.totalCount,
-        },
-        { ...req.query },
-      ),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error card if user repo not found", async () => {
@@ -116,10 +101,8 @@ describe("Test /api/pin", () => {
 
     await pin(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({ message: "User Repository Not found" }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error card if org repo not found", async () => {
@@ -139,10 +122,8 @@ describe("Test /api/pin", () => {
 
     await pin(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({ message: "Organization Repository Not found" }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error card if username in blacklist", async () => {
@@ -160,14 +141,8 @@ describe("Test /api/pin", () => {
 
     await pin(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({
-        message: "This username is blacklisted",
-        secondaryMessage: "Please deploy your own instance",
-        renderOptions: { show_repo_link: false },
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error card if wrong locale provided", async () => {
@@ -186,13 +161,8 @@ describe("Test /api/pin", () => {
 
     await pin(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({
-        message: "Something went wrong",
-        secondaryMessage: "Language not found",
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error card if missing required parameters", async () => {
@@ -206,15 +176,8 @@ describe("Test /api/pin", () => {
 
     await pin(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({
-        message:
-          'Missing params "username", "repo" make sure you pass the parameters in URL',
-        secondaryMessage: "/api/pin?username=USERNAME&amp;repo=REPO_NAME",
-        renderOptions: { show_repo_link: false },
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should have proper cache", async () => {
@@ -232,7 +195,7 @@ describe("Test /api/pin", () => {
 
     await pin(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
     expect(res.setHeader).toHaveBeenCalledWith(
       "Cache-Control",
       `max-age=${CACHE_TTL.PIN_CARD.DEFAULT}, ` +

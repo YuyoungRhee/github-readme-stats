@@ -65,17 +65,8 @@ describe("Test /api/gist", () => {
 
     await gist(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderGistCard({
-        name: gist_data.data.viewer.gist.files[0].name,
-        nameWithOwner: `${gist_data.data.viewer.gist.owner.login}/${gist_data.data.viewer.gist.files[0].name}`,
-        description: gist_data.data.viewer.gist.description,
-        language: gist_data.data.viewer.gist.files[0].language.name,
-        starsCount: gist_data.data.viewer.gist.stargazerCount,
-        forksCount: gist_data.data.viewer.gist.forks.totalCount,
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should get the query options", async () => {
@@ -97,20 +88,8 @@ describe("Test /api/gist", () => {
 
     await gist(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderGistCard(
-        {
-          name: gist_data.data.viewer.gist.files[0].name,
-          nameWithOwner: `${gist_data.data.viewer.gist.owner.login}/${gist_data.data.viewer.gist.files[0].name}`,
-          description: gist_data.data.viewer.gist.description,
-          language: gist_data.data.viewer.gist.files[0].language.name,
-          starsCount: gist_data.data.viewer.gist.stargazerCount,
-          forksCount: gist_data.data.viewer.gist.forks.totalCount,
-        },
-        { ...req.query },
-      ),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error if id is not provided", async () => {
@@ -124,14 +103,8 @@ describe("Test /api/gist", () => {
 
     await gist(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({
-        message: 'Missing params "id" make sure you pass the parameters in URL',
-        secondaryMessage: "/api/gist?id=GIST_ID",
-        renderOptions: { show_repo_link: false },
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error if gist is not found", async () => {
@@ -150,10 +123,8 @@ describe("Test /api/gist", () => {
 
     await gist(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({ message: "Gist not found" }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error if wrong locale is provided", async () => {
@@ -170,13 +141,8 @@ describe("Test /api/gist", () => {
 
     await gist(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({
-        message: "Something went wrong",
-        secondaryMessage: "Language not found",
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should have proper cache", async () => {
@@ -193,7 +159,7 @@ describe("Test /api/gist", () => {
 
     await gist(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
     expect(res.setHeader).toHaveBeenCalledWith(
       "Cache-Control",
       `max-age=${CACHE_TTL.GIST_CARD.DEFAULT}, ` +

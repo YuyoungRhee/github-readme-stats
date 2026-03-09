@@ -16,6 +16,7 @@ import {
   retrieveSecondaryMessage,
 } from "../src/common/error.js";
 import { parseBoolean } from "../src/common/ops.js";
+import { sendImage, setImageHeaders } from "../src/common/image.js";
 
 // @ts-ignore
 export default async (req, res) => {
@@ -32,14 +33,15 @@ export default async (req, res) => {
     border_color,
     show_owner,
     hide_border,
+    format,
   } = req.query;
-
-  res.setHeader("Content-Type", "image/svg+xml");
+  setImageHeaders(res, format);
 
   const access = guardAccess({
     res,
     id,
     type: "gist",
+    format,
     colors: {
       title_color,
       text_color,
@@ -53,7 +55,8 @@ export default async (req, res) => {
   }
 
   if (locale && !isLocaleAvailable(locale)) {
-    return res.send(
+    return sendImage(
+      res,
       renderError({
         message: "Something went wrong",
         secondaryMessage: "Language not found",
@@ -65,6 +68,7 @@ export default async (req, res) => {
           theme,
         },
       }),
+      format,
     );
   }
 
@@ -79,7 +83,8 @@ export default async (req, res) => {
 
     setCacheHeaders(res, cacheSeconds);
 
-    return res.send(
+    return sendImage(
+      res,
       renderGistCard(gistData, {
         title_color,
         icon_color,
@@ -92,11 +97,13 @@ export default async (req, res) => {
         show_owner: parseBoolean(show_owner),
         hide_border: parseBoolean(hide_border),
       }),
+      format,
     );
   } catch (err) {
     setErrorCacheHeaders(res);
     if (err instanceof Error) {
-      return res.send(
+      return sendImage(
+        res,
         renderError({
           message: err.message,
           secondaryMessage: retrieveSecondaryMessage(err),
@@ -109,9 +116,11 @@ export default async (req, res) => {
             show_repo_link: !(err instanceof MissingParamError),
           },
         }),
+        format,
       );
     }
-    return res.send(
+    return sendImage(
+      res,
       renderError({
         message: "An unknown error occurred",
         renderOptions: {
@@ -122,6 +131,7 @@ export default async (req, res) => {
           theme,
         },
       }),
+      format,
     );
   }
 };

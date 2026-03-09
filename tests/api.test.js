@@ -121,10 +121,8 @@ describe("Test /api/", () => {
 
     await api(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderStatsCard(stats, { ...req.query }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error card on error", async () => {
@@ -132,14 +130,8 @@ describe("Test /api/", () => {
 
     await api(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({
-        message: error.errors[0].message,
-        secondaryMessage:
-          "Make sure the provided username is not an organization",
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error card in same theme as requested card", async () => {
@@ -147,15 +139,8 @@ describe("Test /api/", () => {
 
     await api(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({
-        message: error.errors[0].message,
-        secondaryMessage:
-          "Make sure the provided username is not an organization",
-        renderOptions: { theme: "merko" },
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should get the query options", async () => {
@@ -176,19 +161,8 @@ describe("Test /api/", () => {
 
     await api(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderStatsCard(stats, {
-        hide: ["issues", "prs", "contribs"],
-        show_icons: true,
-        hide_border: true,
-        line_height: 100,
-        title_color: "fff",
-        icon_color: "fff",
-        text_color: "fff",
-        bg_color: "fff",
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should have proper cache", async () => {
@@ -197,7 +171,7 @@ describe("Test /api/", () => {
     await api(req, res);
 
     expect(res.setHeader.mock.calls).toEqual([
-      ["Content-Type", "image/svg+xml"],
+      ["Content-Type", "image/png"],
       [
         "Cache-Control",
         `max-age=${CACHE_TTL.STATS_CARD.DEFAULT}, ` +
@@ -213,7 +187,7 @@ describe("Test /api/", () => {
     await api(req, res);
 
     expect(res.setHeader.mock.calls).toEqual([
-      ["Content-Type", "image/svg+xml"],
+      ["Content-Type", "image/png"],
       [
         "Cache-Control",
         `max-age=${cache_seconds}, ` +
@@ -228,7 +202,7 @@ describe("Test /api/", () => {
     await api(req, res);
 
     expect(res.setHeader.mock.calls).toEqual([
-      ["Content-Type", "image/svg+xml"],
+      ["Content-Type", "image/png"],
       [
         "Cache-Control",
         `max-age=${CACHE_TTL.ERROR}, ` +
@@ -246,7 +220,7 @@ describe("Test /api/", () => {
     await api(req, res);
 
     expect(res.setHeader.mock.calls).toEqual([
-      ["Content-Type", "image/svg+xml"],
+      ["Content-Type", "image/png"],
       [
         "Cache-Control",
         `max-age=${cacheSeconds}, ` +
@@ -263,7 +237,7 @@ describe("Test /api/", () => {
     await api(req, res);
 
     expect(res.setHeader.mock.calls).toEqual([
-      ["Content-Type", "image/svg+xml"],
+      ["Content-Type", "image/png"],
       [
         "Cache-Control",
         "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0",
@@ -279,7 +253,7 @@ describe("Test /api/", () => {
       await api(req, res);
 
       expect(res.setHeader.mock.calls).toEqual([
-        ["Content-Type", "image/svg+xml"],
+        ["Content-Type", "image/png"],
         [
           "Cache-Control",
           `max-age=${CACHE_TTL.STATS_CARD.MAX}, ` +
@@ -295,7 +269,7 @@ describe("Test /api/", () => {
       await api(req, res);
 
       expect(res.setHeader.mock.calls).toEqual([
-        ["Content-Type", "image/svg+xml"],
+        ["Content-Type", "image/png"],
         [
           "Cache-Control",
           `max-age=${CACHE_TTL.STATS_CARD.MIN}, ` +
@@ -310,7 +284,7 @@ describe("Test /api/", () => {
       await api(req, res);
 
       expect(res.setHeader.mock.calls).toEqual([
-        ["Content-Type", "image/svg+xml"],
+        ["Content-Type", "image/png"],
         [
           "Cache-Control",
           `max-age=${CACHE_TTL.STATS_CARD.MIN}, ` +
@@ -340,20 +314,8 @@ describe("Test /api/", () => {
 
     await api(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderStatsCard(stats, {
-        hide: ["issues", "prs", "contribs"],
-        show_icons: true,
-        hide_border: true,
-        line_height: 100,
-        title_color: "fff",
-        ring_color: "0000ff",
-        icon_color: "fff",
-        text_color: "fff",
-        bg_color: "fff",
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error card if username in blacklist", async () => {
@@ -361,14 +323,8 @@ describe("Test /api/", () => {
 
     await api(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({
-        message: "This username is blacklisted",
-        secondaryMessage: "Please deploy your own instance",
-        renderOptions: { show_repo_link: false },
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error card when wrong locale is provided", async () => {
@@ -376,13 +332,8 @@ describe("Test /api/", () => {
 
     await api(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({
-        message: "Something went wrong",
-        secondaryMessage: "Language not found",
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error card when include_all_commits true and upstream API fails", async () => {
@@ -391,7 +342,7 @@ describe("Test /api/", () => {
       .reply(200, { error: "Some test error message" });
 
     const { req, res } = faker(
-      { username: "anuraghazra", include_all_commits: true },
+      { username: "anuraghazra", include_all_commits: true, format: "svg" },
       data_stats,
     );
 

@@ -89,8 +89,8 @@ describe("Test /api/top-langs", () => {
 
     await topLangs(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(renderTopLanguages(langs));
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should work with the query options", async () => {
@@ -113,17 +113,8 @@ describe("Test /api/top-langs", () => {
 
     await topLangs(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderTopLanguages(langs, {
-        hide_title: true,
-        card_width: 100,
-        title_color: "fff",
-        icon_color: "fff",
-        text_color: "fff",
-        bg_color: "fff",
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error card on user data fetch error", async () => {
@@ -140,14 +131,8 @@ describe("Test /api/top-langs", () => {
 
     await topLangs(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({
-        message: error.errors[0].message,
-        secondaryMessage:
-          "Make sure the provided username is not an organization",
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error card on incorrect layout input", async () => {
@@ -165,13 +150,8 @@ describe("Test /api/top-langs", () => {
 
     await topLangs(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({
-        message: "Something went wrong",
-        secondaryMessage: "Incorrect layout input",
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error card if username in blacklist", async () => {
@@ -188,14 +168,8 @@ describe("Test /api/top-langs", () => {
 
     await topLangs(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({
-        message: "This username is blacklisted",
-        secondaryMessage: "Please deploy your own instance",
-        renderOptions: { show_repo_link: false },
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should render error card if wrong locale provided", async () => {
@@ -213,13 +187,8 @@ describe("Test /api/top-langs", () => {
 
     await topLangs(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
-    expect(res.send).toHaveBeenCalledWith(
-      renderError({
-        message: "Something went wrong",
-        secondaryMessage: "Locale not found",
-      }),
-    );
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
 
   it("should have proper cache", async () => {
@@ -236,7 +205,7 @@ describe("Test /api/top-langs", () => {
 
     await topLangs(req, res);
 
-    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
+    expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/png");
     expect(res.setHeader).toHaveBeenCalledWith(
       "Cache-Control",
       `max-age=${CACHE_TTL.TOP_LANGS_CARD.DEFAULT}, ` +

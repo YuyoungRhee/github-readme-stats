@@ -14,6 +14,7 @@ import {
 } from "../src/common/error.js";
 import { parseBoolean } from "../src/common/ops.js";
 import { renderError } from "../src/common/render.js";
+import { sendImage, setImageHeaders } from "../src/common/image.js";
 import { fetchRepo } from "../src/fetchers/repo.js";
 import { isLocaleAvailable } from "../src/translations.js";
 
@@ -34,14 +35,15 @@ export default async (req, res) => {
     border_radius,
     border_color,
     description_lines_count,
+    format,
   } = req.query;
-
-  res.setHeader("Content-Type", "image/svg+xml");
+  setImageHeaders(res, format);
 
   const access = guardAccess({
     res,
     id: username,
     type: "username",
+    format,
     colors: {
       title_color,
       text_color,
@@ -55,7 +57,8 @@ export default async (req, res) => {
   }
 
   if (locale && !isLocaleAvailable(locale)) {
-    return res.send(
+    return sendImage(
+      res,
       renderError({
         message: "Something went wrong",
         secondaryMessage: "Language not found",
@@ -67,6 +70,7 @@ export default async (req, res) => {
           theme,
         },
       }),
+      format,
     );
   }
 
@@ -81,7 +85,8 @@ export default async (req, res) => {
 
     setCacheHeaders(res, cacheSeconds);
 
-    return res.send(
+    return sendImage(
+      res,
       renderRepoCard(repoData, {
         hide_border: parseBoolean(hide_border),
         title_color,
@@ -95,11 +100,13 @@ export default async (req, res) => {
         locale: locale ? locale.toLowerCase() : null,
         description_lines_count,
       }),
+      format,
     );
   } catch (err) {
     setErrorCacheHeaders(res);
     if (err instanceof Error) {
-      return res.send(
+      return sendImage(
+        res,
         renderError({
           message: err.message,
           secondaryMessage: retrieveSecondaryMessage(err),
@@ -112,9 +119,11 @@ export default async (req, res) => {
             show_repo_link: !(err instanceof MissingParamError),
           },
         }),
+        format,
       );
     }
-    return res.send(
+    return sendImage(
+      res,
       renderError({
         message: "An unknown error occurred",
         renderOptions: {
@@ -125,6 +134,7 @@ export default async (req, res) => {
           theme,
         },
       }),
+      format,
     );
   }
 };
