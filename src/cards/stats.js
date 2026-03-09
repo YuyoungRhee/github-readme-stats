@@ -228,6 +228,7 @@ const getStyles = ({
     .rank-circle {
       stroke: ${ringColor};
       stroke-dasharray: 250;
+      stroke-dashoffset: ${calculateCircleProgress(0)};
       fill: none;
       stroke-width: 6;
       stroke-linecap: round;
@@ -239,7 +240,7 @@ const getStyles = ({
     ${
       disable_animations
         ? `.rank-circle { stroke-dashoffset: ${calculateCircleProgress(progress)}; animation: none; }
-           .rank-text { animation: none; }`
+           .rank-text { animation: none; transform: translate(-5px, 5px) scale(1); }`
         : ""
     }
     ${process.env.NODE_ENV === "test" ? "" : getProgressAnimation({ progress })}
