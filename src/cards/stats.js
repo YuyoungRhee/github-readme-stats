@@ -238,7 +238,7 @@ const getStyles = ({
     ${
       disable_animations
         ? `.rank-circle { stroke-dashoffset: ${calculateCircleProgress(progress)}; animation: none; }
-           .rank-text { animation: none; transform: translate(-5px, 5px) scale(1); }`
+           .rank-text { animation: none; transform: scale(1); }`
         : ""
     }
     ${process.env.NODE_ENV === "test" ? "" : getProgressAnimation({ progress })}

@@ -189,10 +189,10 @@ class Card {
       /* Animations */
       @keyframes scaleInAnimation {
         from {
-          transform: translate(-5px, 5px) scale(0);
+          transform: scale(0);
         }
         to {
-          transform: translate(-5px, 5px) scale(1);
+          transform: scale(1);
         }
       }
       @keyframes fadeInAnimation {
